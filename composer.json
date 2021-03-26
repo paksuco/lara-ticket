@@ -1,6 +1,6 @@
 {
-	"name" : "sdkcodes/lara-ticket",
-	"description" : "A laravel 5 package to handle 'support ticket'",
+	"name" : "paksuco/lara-ticket",
+	"description" : "A laravel 5 package to handle 'support ticket', a fork from sdkcodes/lara-ticket",
 	"type" : "laravel-package",
 	"keywords" : ["laravel support ticket", "Laravel ticket support", "ticket laravel", "laravel-5-package"],
 	"require": {
