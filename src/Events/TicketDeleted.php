@@ -25,7 +25,6 @@ class TicketDeleted
     public function __construct(Ticket $ticket)
     {
         $this->ticket;
-        
     }
 
     /**

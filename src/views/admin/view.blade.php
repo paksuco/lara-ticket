@@ -1,12 +1,12 @@
-@extends(config('laraticket.layout'))
-@section(config('laraticket.layout_section'))
+@extends(config('laraticket.admin_layout'))
+@section(config('laraticket.admin_layout_section'))
 <div class="container mx-auto">
 	<section>
 		<div class="relative flex flex-col min-w-0 break-words bg-white border rounded border-1 border-grey-light">
 			<div class="px-6 py-3 mb-0 bg-grey-lighter border-b-1 border-grey-light text-grey-darkest">
 				{{-- <span class="h4">{{ $ticket->title }}</span> --}}
 				<div class="text-right">
-					<a href="{{ url('tickets/create') }}" class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-blue-lightest bg-blue hover:bg-blue-light">Create new ticket</a>
+					<a href="{{ url('/admin/tickets/create') }}" class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-blue-lightest bg-blue hover:bg-blue-light">Create new ticket</a>
 				</div>
 			</div>
 			<div class="flex-auto p-6">
@@ -52,15 +52,15 @@
 				</div>
 				<div class="float-right">
 					@if ($ticket->isOpen())
-						<a class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-teal-lightest bg-teal hover:bg-teal-light" href="{{ url('tickets/'.$ticket->id.'/update?action=absolute pin-t pin-b pin-r px-4 py-3') }}"><i class="fa fa-close"></i> Close</a>
+						<a class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-teal-lightest bg-teal hover:bg-teal-light" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=absolute pin-t pin-b pin-r px-4 py-3') }}"><i class="fa fa-close"></i> Close</a>
 						<button class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-blue-lightest bg-blue hover:bg-blue-light" data-target="#reply-modal" data-toggle="modal">Reply</button>
 					@elseif ($ticket->isClosed())
-						<a class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-yellow-lightest bg-yellow hover:bg-yellow-light" href="{{ url('tickets/'.$ticket->id.'/update?action=open') }}"><i class="fa fa-open"></i> Reopen</a>
+						<a class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-yellow-lightest bg-yellow hover:bg-yellow-light" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=open') }}"><i class="fa fa-open"></i> Reopen</a>
 					@endif
 				</div>
 			</div>
 			<div class="px-6 py-3 bg-grey-lighter border-t-1 border-grey-light">
-				<form action="{{ url('tickets/'.$ticket->id) }}" method="POST">
+				<form action="{{ url('/admin/tickets/'.$ticket->id) }}" method="POST">
 					{{ method_field('DELETE')}}
 					{{ csrf_field() }}
 					<button class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle border rounded select-none text-red-lightest bg-red hover:bg-red-light"><i class="fa fa-trash"></i> Delete</button>
@@ -76,7 +76,7 @@
 				Reply ticket
 			</div>
 			<div class="modal-body">
-				<form method="POST" action="{{ url('tickets/comments/store/'.$ticket->id) }}">
+				<form method="POST" action="{{ url('/admin/tickets/comments/store/'.$ticket->id) }}">
 					{{ csrf_field() }}
 					<div class="mb-4">
 						<textarea class="block w-full px-2 py-1 mb-1 text-base leading-normal bg-white border rounded appearance-none text-grey-darker border-grey" name="content" placeholder="Enter your comment here"></textarea>

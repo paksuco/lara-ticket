@@ -6,16 +6,13 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use Sdkcodes\LaraTicket\Events\TicketClosed;
 use Sdkcodes\LaraTicket\Events\TicketDeleted;
 use Sdkcodes\LaraTicket\Events\TicketReplied;
-use Sdkcodes\LaraTicket\Events\TicketSubmitted;
 use Sdkcodes\LaraTicket\Models\Ticket;
 use Sdkcodes\LaraTicket\Models\TicketComment;
-use Sdkcodes\LaraTicket\Models\TicketOption;
 
-class TicketController extends Controller
+class TicketAdminController extends Controller
 {
     protected $perPage = "";
 
@@ -26,15 +23,12 @@ class TicketController extends Controller
 
     public function index($status = "open")
     {
-        /** @var \App\User $user */
-        $user = Auth::user();
-
-        $tickets = $user->tickets()->where('status', $status)->paginate($this->perPage);
+        $tickets = Ticket::where('status', $status)->latest()->paginate($this->perPage);
         $data['title'] = $data['breadcrumb'] = "Tickets";
         $data['tickets'] = $tickets;
-        $data['open_count'] = $user->countTickets("open");
-        $data['closed_count'] = $user->countTickets("closed");
-        return view('laraticket::user_tickets', $data);
+        $data['open_count'] = Ticket::countTickets("open");
+        $data['closed_count'] = Ticket::countTickets("closed");
+        return view('laraticket::admin.tickets', $data);
     }
 
     public function show($slug)
@@ -43,57 +37,16 @@ class TicketController extends Controller
         $data['title'] = $ticket->title;
         $data['breadcrumb'] = "View Ticket";
         $data['ticket'] = $ticket;
-        return view('laraticket::view', $data);
-    }
-
-    public function create()
-    {
-        $ticket_options = new TicketOption;
-        $data['categories'] = $ticket_options->getCategories();
-        $data['priorities'] = $ticket_options->getPriorities();
-        $data['breadcrumb'] = $data['title'] = "Create new ticket";
-
-        return view('laraticket::create', $data);
-    }
-    public function store(Request $request)
-    {
-        /** @var \App\User $user */
-        $user = Auth::user();
-
-        $this->validate(
-            $request,
-            [
-                'title' => 'required|string|max:255',
-                'body' => 'required',
-                'priority' => 'required|string|max:30',
-                'category' => 'required|string|max:30',
-            ]
-        );
-        $ticket = new Ticket;
-        $ticket->user_id = $user->id();
-        $ticket->user_name = $user->name;
-        $ticket->title = $request->title;
-        $ticket->slug = str_slug($request->title) . str_random(4);
-        $ticket->body = $request->body;
-        $ticket->priority = $request->priority;
-        $ticket->category = $request->category;
-        $ticket->status = "open";
-        $ticket->save();
-        $notification_data = ['message' => $user->name . " submitted a ticket", "url" => url("tickets/show/$ticket->slug")];
-        // Notification::send( (new User)->getTicketAdmins(), new TicketNotification($ticket, $notification_data));
-        event(new TicketSubmitted($ticket));
-        return redirect(url('tickets'))->with(['status' => 'success', 'message' => 'Ticket created, you will be notified when there\'s a reply']);
+        return view('laraticket::admin.view', $data);
     }
 
     public function reply(Request $request, $id)
     {
         /** @var \App\User $user */
         $user = Auth::user();
-
         $this->validate($request, ['content' => 'required']);
         $ticket = Ticket::findOrFail($id);
-
-        if ($ticket->user_id === $user->id()) {
+        if ($user->isTicketAdmin()) {
             $comment = new TicketComment;
             $comment->user_id = $user->id();
             $comment->ticket_id = $id;
@@ -113,10 +66,11 @@ class TicketController extends Controller
 
         $this->validate($request, [
             'action' => 'required']); //set array rule to check if action is correct
+
         $ticket = Ticket::findOrFail($id);
         $action = $request->action;
 
-        if ($ticket->user_id === $user->id()) {
+        if ($user->isTicketAdmin()) {
             switch ($action) {
                 case 'open':
                     $ticket->status = "open";
@@ -142,9 +96,8 @@ class TicketController extends Controller
     {
         /** @var \App\User $user */
         $user = Auth::user();
-
         $ticket = Ticket::findOrFail($ticket);
-        if ($ticket->user_id === $user->id()) {
+        if ($user->isTicketAdmin()) {
             event(new TicketDeleted($ticket));
             $ticket->delete();
             return redirect(url('tickets'))->with(['status' => 'info', 'message' => 'Ticket deleted']);

@@ -18,8 +18,6 @@ class CreateTicketOptionsTable extends Migration
             $table->increments('id');
             $table->string('key');
             $table->string('values')->nullable();
-            // $table->string('categories')->default("one,two,three")->nullable();
-            // $table->string('priorities')->default("high,medium,low")->nullable();
             $table->timestamps();
         });
         TicketOption::create(['key' => 'Categories']);

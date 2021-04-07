@@ -23,7 +23,7 @@ class TicketSubmitted
      *
      * @return void
      */
-    public function __construct(Ticket $ticket=null)
+    public function __construct(Ticket $ticket = null)
     {
         $this->ticket = $ticket;
     }

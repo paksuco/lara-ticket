@@ -25,7 +25,6 @@ class TicketReplied
     public function __construct(TicketComment $comment)
     {
         $this->comment = $comment;
-        
     }
 
     /**
