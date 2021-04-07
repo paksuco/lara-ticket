@@ -44,7 +44,7 @@ class TicketAdminController extends Controller
     {
         /** @var \App\User $user */
         $user = Auth::user();
-        $this->validate($request, ['content' => 'required']);
+        $request->validate(['content' => 'required']);
         $ticket = Ticket::findOrFail($id);
         if ($user->isTicketAdmin()) {
             $comment = new TicketComment;
@@ -52,6 +52,7 @@ class TicketAdminController extends Controller
             $comment->ticket_id = $id;
             $comment->body = $request->content;
             $comment->save();
+            $ticket->touch();
             event(new TicketReplied($comment));
             return back()->with(['status' => 'success', 'message' => "Comment submitted successfully"]);
         } else {
@@ -64,8 +65,7 @@ class TicketAdminController extends Controller
         /** @var \App\User $user */
         $user = Auth::user();
 
-        $this->validate($request, [
-            'action' => 'required']); //set array rule to check if action is correct
+        $request->validate(['action' => 'required']); //set array rule to check if action is correct
 
         $ticket = Ticket::findOrFail($id);
         $action = $request->action;
@@ -100,9 +100,9 @@ class TicketAdminController extends Controller
         if ($user->isTicketAdmin()) {
             event(new TicketDeleted($ticket));
             $ticket->delete();
-            return redirect(url('tickets'))->with(['status' => 'info', 'message' => 'Ticket deleted']);
+            return redirect(url('/admin/tickets'))->with(['status' => 'info', 'message' => 'Ticket deleted']);
         } else {
-            return redirect(url('tickets'))->with(['status' => 'info', "message" => "You do not have permission to delete this ticket"]);
+            return redirect(url('/admin/tickets'))->with(['status' => 'info', "message" => "You do not have permission to delete this ticket"]);
         }
     }
 }

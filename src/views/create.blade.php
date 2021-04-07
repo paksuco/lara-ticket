@@ -32,7 +32,7 @@
 		</div>
 		<div>
 			@include('laraticket::errors.form_error')
-			<form role="form" action="{{ url('tickets/store') }}" method="POST">
+			<form role="form" action="{{ url('tickets/store') }}" method="POST" class="p-4">
 				{{ csrf_field() }}
 				<div class="mb-4">
 					<div class="flex flex-wrap">
@@ -70,8 +70,8 @@
 					<label>@lang("Description")</label>
 					<textarea name="body" class="block w-full bg-white" placeholder="@lang("Describe your complaint in detail")" id="editor"></textarea>
 				</div>
-				<div class="mb-4">
-					<button class="inline-block px-4 py-2 text-base font-normal leading-normal text-center no-underline whitespace-no-wrap align-middle bg-green-500 border rounded select-none text-green-50 hover:bg-green-400 pull-right" type="submit">@lang("Submit Ticket")</button>
+				<div class="py-2 mb-4 text-right">
+					<button class="px-4 py-3 font-semibold text-white bg-blue-600 rounded hover:text-white hover:bg-blue-700 pull-right" type="submit">@lang("Submit Ticket")</button>
 				</div>
 			</form>
 		</div>

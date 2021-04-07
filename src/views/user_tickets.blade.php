@@ -2,61 +2,55 @@
 @section(config('laraticket.layout_section'))
 <div class="p-4 text-sm md:p-8">
     <div class="flex flex-col">
-        <div class="flex items-baseline justify-between w-full">
-			<h1 class="mb-8 text-3xl font-bold text-gray-700">@lang("Support Tickets")</h1>
-			<a href="{{ url('tickets/create') }}" class="inline-block px-4 py-2 text-base font-normal leading-normal text-center text-blue-100 no-underline whitespace-no-wrap align-middle bg-blue-500 border border-blue-600 rounded select-none hover:bg-blue-600 hover:text-white"><i class="mr-2 fa fa-plus"></i>Create new ticket</a>
-		</div>
-
-        <ul class="flex flex-wrap w-full mb-4">
-            <li role="presentation" class="-mb-px {{ is_null(Request::segment(2)) || Request::segment(2) == "open" ? 'active' : ''}}">
-				<a href="{{ url('tickets/open') }}" class="flex items-center px-3 py-1 mr-2 text-white bg-indigo-600 border border-indigo-700 rounded-lg">
-					Open <span class="ml-2 font-semibold">{{ $open_count }}</span>
-				</a></li>
-            <li role="presentation" class="-mb-px{{ Request::segment(2) == "closed" ? 'active' : ''}}">
-				<a href="{{ url('tickets/closed') }}" class="flex items-center px-3 py-1 text-white bg-indigo-600 border border-indigo-700 rounded-lg">
-					Closed <span class="ml-2 font-semibold">{{ $closed_count }}</span>
-				</a>
-			</li>
-        </ul>
-        <section>
-            <div class="relative flex flex-col min-w-0 break-words bg-white border rounded border-1 border-grey-light">
-                <div class="px-6 py-3 mb-0 bg-grey-lighter border-b-1 border-grey-light text-grey-darkest"><span class="h4">Tickets</span>
-
+        <div class="flex items-center justify-between w-full mb-8">
+            <h1 class="text-3xl font-bold leading-4 text-gray-700">@lang("Support Tickets")</h1>
+            <a href="{{ url('tickets/create') }}" class="px-3 py-2 font-semibold text-white bg-blue-600 rounded hover:text-white hover:bg-blue-700">
+                <i class="mr-2 fa fa-plus"></i>@lang("Create Support Ticket")
+            </a>
+        </div>
+        <div class="p-8 bg-white rounded">
+            <ul class="flex flex-wrap w-full mb-4 text-sm">
+                <li>
+                    <a href="{{ url('tickets/open') }}" class="px-3 py-1 mr-2 text-black bg-gray-200 rounded {{ Request::segment(2) == "open" || Request::segment(2) == "" ? 'bg-yellow-300' : ''}}">
+                        @lang("Open Tickets") <span class="ml-2 font-semibold">{{ $open_count }}</span>
+                    </a></li>
+                <li>
+                    <a href="{{ url('tickets/closed') }}" class="px-3 py-1 text-black bg-gray-200 rounded {{ Request::segment(2) == "closed" ? 'bg-yellow-300' : ''}}">
+                        @lang("Closed Tickets") <span class="ml-2 font-semibold">{{ $closed_count }}</span>
+                    </a>
+                </li>
+            </ul>
+            <section>
+                <div class="block w-full overflow-auto scrolling-touch">
+                    <table class="table w-full text-sm">
+                        <thead class="hidden md:table-header-group">
+                            <tr>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Subject</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Status</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Created</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Last updated</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Priority</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($tickets as $ticket)
+                            <tr class="@if($loop->even) bg-cool-gray-100 @else bg-cool-gray-50 @endif">
+                                <td class="px-3 py-2"><a href="{{ url('tickets/show/'.$ticket->slug) }}">{{ $ticket->title }}</a></td>
+                                <td class="px-3 py-2">{{ $ticket->status }}</td>
+                                <td class="px-3 py-2">{{ $ticket->created_at->diffForHumans() }}</td>
+                                <td class="px-3 py-2">{{ $ticket->updated_at->diffForHumans() }}</td>
+                                <td class="px-3 py-2">{{ $ticket->priority }}</td>
+                                <td class="px-3 py-2">{{ $ticket->category }}</td>
+                            </tr>
+                            @empty
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
-                <div class="flex-auto p-6">
-                    <div class="block w-full overflow-auto scrolling-touch">
-                        <table class="w-full max-w-full mb-4 bg-transparent table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Subject</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Last updated</th>
-                                    <th>Priority</th>
-                                    <th>Owner</th>
-                                    <th>Category</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($tickets as $ticket)
-                                <tr>
-                                    <td><a href="{{ url('tickets/show/'.$ticket->slug) }}">{{ $ticket->title }}</a></td>
-                                    <td>{{ $ticket->status }}</td>
-                                    <td>{{ $ticket->created_at->diffForHumans() }}</td>
-                                    <td>{{ $ticket->updated_at->diffForHumans() }}</td>
-                                    <td>{{ $ticket->priority }}</td>
-                                    <td>{{ $ticket->user_name }}</td>
-                                    <td>{{ $ticket->category }}</td>
-                                </tr>
-                                @empty
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    {{ $tickets->links() }}
-                </div>
-            </div>
-        </section>
+                {{ $tickets->links() }}
+            </section>
+        </div>
     </div>
 </div>
 @endsection

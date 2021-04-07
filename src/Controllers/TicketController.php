@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Sdkcodes\LaraTicket\Events\TicketClosed;
 use Sdkcodes\LaraTicket\Events\TicketDeleted;
 use Sdkcodes\LaraTicket\Events\TicketReplied;
@@ -60,8 +61,7 @@ class TicketController extends Controller
         /** @var \App\User $user */
         $user = Auth::user();
 
-        $this->validate(
-            $request,
+        $request->validate(
             [
                 'title' => 'required|string|max:255',
                 'body' => 'required',
@@ -70,10 +70,10 @@ class TicketController extends Controller
             ]
         );
         $ticket = new Ticket;
-        $ticket->user_id = $user->id();
+        $ticket->user_id = $user->id;
         $ticket->user_name = $user->name;
         $ticket->title = $request->title;
-        $ticket->slug = str_slug($request->title) . str_random(4);
+        $ticket->slug = Str::slug($request->title) . Str::random(4);
         $ticket->body = $request->body;
         $ticket->priority = $request->priority;
         $ticket->category = $request->category;
@@ -90,15 +90,17 @@ class TicketController extends Controller
         /** @var \App\User $user */
         $user = Auth::user();
 
-        $this->validate($request, ['content' => 'required']);
+        $request->validate(['content' => 'required']);
+
         $ticket = Ticket::findOrFail($id);
 
-        if ($ticket->user_id === $user->id()) {
+        if ($ticket->user_id === $user->id) {
             $comment = new TicketComment;
-            $comment->user_id = $user->id();
+            $comment->user_id = $user->id;
             $comment->ticket_id = $id;
             $comment->body = $request->content;
             $comment->save();
+            $ticket->touch();
             event(new TicketReplied($comment));
             return back()->with(['status' => 'success', 'message' => "Comment submitted successfully"]);
         } else {
@@ -111,12 +113,12 @@ class TicketController extends Controller
         /** @var \App\User $user */
         $user = Auth::user();
 
-        $this->validate($request, [
+        $request->validate([
             'action' => 'required']); //set array rule to check if action is correct
         $ticket = Ticket::findOrFail($id);
         $action = $request->action;
 
-        if ($ticket->user_id === $user->id()) {
+        if ($ticket->user_id === $user->id) {
             switch ($action) {
                 case 'open':
                     $ticket->status = "open";
@@ -144,7 +146,7 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $ticket = Ticket::findOrFail($ticket);
-        if ($ticket->user_id === $user->id()) {
+        if ($ticket->user_id === $user->id) {
             event(new TicketDeleted($ticket));
             $ticket->delete();
             return redirect(url('tickets'))->with(['status' => 'info', 'message' => 'Ticket deleted']);

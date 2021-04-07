@@ -1,45 +1,47 @@
 @extends(config('laraticket.admin_layout'))
 @section(config('laraticket.admin_layout_section'))
-<div class="container mx-auto">
-    <ul class="flex flex-wrap pl-0 mb-0 border border-t-0 border-l-0 border-r-0 list-reset border-b-1 border-grey-light">
-        <li role="presentation" class="-mb-px {{ is_null(Request::segment(2)) || Request::segment(2) == "open" ? 'active' : ''}}">
-            <a href="{{ url('admin/tickets/open') }}" class="inline-block px-4 py-2 mx-1 no-underline border border-b-0 rounded rounded-t">
-                Open <span class="inline-block p-1 text-sm font-semibold leading-none text-center align-baseline rounded text-grey-darker bg-grey-light">{{ $open_count }}</span>
-            </a>
-        </li>
-        <li role="presentation" class="-mb-px{{ Request::segment(2) == "closed" ? 'active' : ''}}">
-			<a href="{{ url('admin/tickets/closed') }}" class="inline-block px-4 py-2 mx-1 no-underline border border-b-0 rounded rounded-t">
-				Closed <span class="inline-block p-1 text-sm font-semibold leading-none text-center align-baseline rounded text-grey-darker bg-grey-light">{{ $closed_count }}</span>
-			</a>
-		</li>
-    </ul>
-    <section>
-        <div class="relative flex flex-col min-w-0 break-words bg-white border rounded border-1 border-grey-light">
-            <div class="px-6 py-3 mb-0 bg-grey-lighter border-b-1 border-grey-light text-grey-darkest"><span class="h4">Tickets</span></div>
-            <div class="flex-auto p-6">
+<div class="container min-h-screen p-8 border-t">
+    <div class="items-end w-full">
+        <div class="flex items-center mb-3">
+            <div class="w-full">
+                <h2 class="text-3xl font-semibold" style="line-height: 1em">@lang("Support Tickets")</h2>
+            </div>
+        </div>
+        <p class="mb-4 text-sm font-light leading-5 text-gray-600">@lang("This page contains the support tickets from our users.")</p>
+        <div class="p-8 bg-white rounded">
+            <ul class="flex flex-wrap w-full mb-4 text-sm">
+                <li>
+                    <a href="{{ url('/admin/tickets/open') }}" class="px-3 py-1 mr-2 text-black bg-gray-200 rounded {{ Request::segment(3) == "open" || Request::segment(3) == "" ? 'bg-yellow-300' : ''}}">
+                        @lang("Open Tickets") <span class="ml-2 font-semibold">{{ $open_count }}</span>
+                    </a></li>
+                <li>
+                    <a href="{{ url('/admin/tickets/closed') }}" class="px-3 py-1 text-black bg-gray-200 rounded {{ Request::segment(3) == "closed" ? 'bg-yellow-300' : ''}}">
+                        @lang("Closed Tickets") <span class="ml-2 font-semibold">{{ $closed_count }}</span>
+                    </a>
+                </li>
+            </ul>
+            <section>
                 <div class="block w-full overflow-auto scrolling-touch">
-                    <table class="w-full max-w-full mb-4 bg-transparent table-striped">
-                        <thead>
+                    <table class="table w-full text-sm">
+                        <thead class="hidden md:table-header-group">
                             <tr>
-                                <th>Subject</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                                <th>Last updated</th>
-                                <th>Priority</th>
-                                <th>Owner</th>
-                                <th>Category</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Subject</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Status</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Created</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Last updated</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Priority</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Category</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($tickets as $ticket)
-                            <tr>
-                                <td><a href="{{ url('admin/tickets/show/'.$ticket->slug) }}">{{ $ticket->title }}</a></td>
-                                <td>{{ $ticket->status }}</td>
-                                <td>{{ $ticket->created_at->diffForHumans() }}</td>
-                                <td>{{ $ticket->updated_at->diffForHumans() }}</td>
-                                <td>{{ $ticket->priority }}</td>
-                                <td>{{ $ticket->user_name }}</td>
-                                <td>{{ $ticket->category }}</td>
+                            <tr class="@if($loop->even) bg-cool-gray-100 @else bg-cool-gray-50 @endif">
+                                <td class="px-3 py-2"><a href="{{ url('/admin/tickets/show/'.$ticket->slug) }}">{{ $ticket->title }}</a></td>
+                                <td class="px-3 py-2">{{ $ticket->status }}</td>
+                                <td class="px-3 py-2">{{ $ticket->created_at->diffForHumans() }}</td>
+                                <td class="px-3 py-2">{{ $ticket->updated_at->diffForHumans() }}</td>
+                                <td class="px-3 py-2">{{ $ticket->priority }}</td>
+                                <td class="px-3 py-2">{{ $ticket->category }}</td>
                             </tr>
                             @empty
                             @endforelse
@@ -47,8 +49,8 @@
                     </table>
                 </div>
                 {{ $tickets->links() }}
-            </div>
+            </section>
         </div>
-    </section>
+    </div>
 </div>
 @endsection
