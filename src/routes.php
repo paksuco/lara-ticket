@@ -13,11 +13,11 @@ Route::namespace("Sdkcodes\LaraTicket\Controllers")->middleware('web', 'auth')->
         Route::get('tickets', [TicketAdminController::class, "index"]);
         Route::get('tickets/show/{ticket}', [TicketAdminController::class, "show"]);
         Route::get('tickets/{status?}', [TicketAdminController::class, "index"]);
-        Route::get('tickets/{ticket}/update', [TicketController::class, "changestatus"]);
-        Route::post('tickets/store', [TicketController::class, "store"]);
-        Route::put('tickets/{ticket}', [TicketController::class, "update"]);
-        Route::delete('tickets/{ticket}', [TicketController::class, "delete"]);
-        Route::post('tickets/comments/store/{ticket}', [TicketController::class, "reply"]);
+        Route::get('tickets/{ticket}/update', [TicketAdminController::class, "changestatus"]);
+        Route::post('tickets/store', [TicketAdminController::class, "store"]);
+        Route::put('tickets/{ticket}', [TicketAdminController::class, "update"]);
+        Route::delete('tickets/{ticket}', [TicketAdminController::class, "delete"]);
+        Route::post('tickets/comments/store/{ticket}', [TicketAdminController::class, "reply"]);
     });
 
     Route::get('tickets/create', [TicketController::class, "create"]);

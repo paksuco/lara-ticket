@@ -32,7 +32,6 @@ class Ticket extends Model
 
     public function owner()
     {
-        
         return $this->belongsTo(config('laraticket.user_model_namespace'), 'user_id');
     }
 }

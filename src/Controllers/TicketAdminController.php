@@ -48,7 +48,7 @@ class TicketAdminController extends Controller
         $ticket = Ticket::findOrFail($id);
         if ($user->isTicketAdmin()) {
             $comment = new TicketComment;
-            $comment->user_id = $user->id();
+            $comment->user_id = $user->id;
             $comment->ticket_id = $id;
             $comment->body = $request->content;
             $comment->save();
