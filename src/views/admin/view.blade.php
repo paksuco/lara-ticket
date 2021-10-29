@@ -57,23 +57,23 @@
                     <div class="flex flex-col p-4 whitespace-no-wrap text-cool-gray-800 sm:w-auto bg-cool-gray-200">
                         <div class="flex flex-col flex-1">
                             <div class="flex flex-col">
-                                <div class='w-20 font-bold'>Ticket by:</div>
+                                <div class='w-20 font-bold'>@lang("Ticket by:")</div>
                                 <div class="font-light">{{ $ticket->user_name }}</div>
                             </div>
                             <div class="flex flex-col">
-                                <div class='w-20 font-bold'>Status:</div>
+                                <div class='w-20 font-bold'>@lang("Status:")</div>
                                 <div class="font-light">{{ $ticket->status }}</div>
                             </div>
                             <div class="flex flex-col">
-                                <div class='w-20 font-bold'>Category:</div>
+                                <div class='w-20 font-bold'>@lang("Category:")</div>
                                 <div class="font-light">{{ $ticket->category }}</div>
                             </div>
                             <div class="flex flex-col">
-                                <div class='w-20 font-bold'>Priority:</div>
+                                <div class='w-20 font-bold'>@lang("Priority:")</div>
                                 <div class="font-light">{{ $ticket->priority }}</div>
                             </div>
                             <div class="flex flex-col">
-                                <div class='w-20 font-bold'>Opened:</div>
+                                <div class='w-20 font-bold'>@lang("Opened:")</div>
                                 <div class="font-light">{{ $ticket->created_at->diffForHumans() }}</div>
                             </div>
                             <div class="flex items-end justify-end flex-1">
@@ -102,7 +102,7 @@
                     </div>
                     @empty
                     <div class="relative block w-full p-6 mb-4 bg-white rounded-lg">
-                    No comments yet.
+                    @lang("No comments yet.")
                     </div>
                     @endforelse
 
@@ -111,9 +111,9 @@
                         <textarea id="editor" class="block w-full px-2 py-1 text-base leading-normal text-gray-700 bg-white border border-gray-100 rounded appearance-none" name="content" placeholder="Enter your comment here"></textarea>
                         <div class="mt-4 text-right">
                             @if ($ticket->isOpen())
-                            <a class="inline-block px-4 py-1 text-base font-normal leading-normal text-white bg-red-700 rounded" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=close') }}"><i class="fa fa-close"></i> Close Ticket</a>
+                            <a class="inline-block px-4 py-1 text-base font-normal leading-normal text-white bg-red-700 rounded" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=close') }}"><i class="fa fa-close"></i> @lang('Close Ticket')</a>
                             @elseif ($ticket->isClosed())
-                            <a class="inline-block px-4 py-1 text-base font-normal leading-normal text-white bg-green-700 rounded" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=open') }}"><i class="fa fa-open"></i> Reopen Ticket</a>
+                            <a class="inline-block px-4 py-1 text-base font-normal leading-normal text-white bg-green-700 rounded" href="{{ url('/admin/tickets/'.$ticket->id.'/update?action=open') }}"><i class="fa fa-open"></i> @lang('Reopen Ticket')</a>
                             @endif
                             <button class="inline-block px-4 py-1 text-base font-normal leading-normal text-white bg-indigo-700 rounded" type="submit">@lang("Submit")</button>
                         </div>
@@ -130,7 +130,7 @@
 <script>
     $(document).ready(function() {
         $("#editor").summernote({
-            placeholder: "Enter article content here"
+            placeholder: "@lang('Enter article content here')"
             , tabsize: 2
             , height: 150
         });

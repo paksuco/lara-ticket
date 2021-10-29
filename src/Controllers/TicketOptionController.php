@@ -10,10 +10,17 @@ class TicketOptionController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
+        $request->validate(
+            [
             "categories" => "required|string",
             "priorities" => "required|string",
-        ]);
+            ],
+            [],
+            [
+            "categories" => __("Categories"),
+            "priorities" => __("Priority")
+            ]
+        );
 
         $categories = str_replace(PHP_EOL, "\n", strip_tags($request->categories));
         $priorities = str_replace(PHP_EOL, "\n", strip_tags($request->priorities));
@@ -27,8 +34,8 @@ class TicketOptionController extends Controller
     public function options()
     {
         return view('laraticket::admin.options', [
-            'categories' => implode(PHP_EOL, TicketOption::getCategories()),
-            'priorities' => implode(PHP_EOL, TicketOption::getPriorities()),
+        'categories' => implode(PHP_EOL, TicketOption::getCategories()),
+        'priorities' => implode(PHP_EOL, TicketOption::getPriorities()),
         ]);
     }
 }

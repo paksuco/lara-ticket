@@ -84,7 +84,7 @@
 <script>
 	$(document).ready(function(){
 		$("#editor").summernote({
-			placeholder: "Enter article content here",
+			placeholder: "@lang('Enter article content here')",
 			tabsize: 2,
 			height: 300
 		});

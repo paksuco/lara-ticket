@@ -25,12 +25,12 @@
                     <table class="table w-full text-sm">
                         <thead class="hidden md:table-header-group">
                             <tr>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Subject</th>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Status</th>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Created</th>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Last updated</th>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Priority</th>
-                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">Category</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Subject")</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Status")</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Created")</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Last updated")</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Priority")</th>
+                                <th class="relative top-0 px-3 py-2 text-left bg-cool-gray-200">@lang("Category")</th>
                             </tr>
                         </thead>
                         <tbody>

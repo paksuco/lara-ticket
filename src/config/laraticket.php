@@ -11,11 +11,11 @@ return[
     'layout_section' => 'content',
 
     /*
-	|--------------------------
-	| If you probably need to use a different template layout for the admin part of the ticket
-	| you can make change this value to match
-	|--------------------------
-	*/
+    |--------------------------
+    | If you probably need to use a different template layout for the admin part of the ticket
+    | you can make change this value to match
+    |--------------------------
+    */
     'admin_layout' => 'laraticket::layouts.master',
 
     /*

@@ -67,6 +67,13 @@ class TicketController extends Controller
                 'body' => 'required',
                 'priority' => 'required|string|max:30',
                 'category' => 'required|string|max:30',
+            ],
+            [],
+            [
+                'title' => __("Title"),
+                'body' => __("Content"),
+                'priority' => __("Priority"),
+                'category' => __("Category")
             ]
         );
         $ticket = new Ticket;
@@ -114,7 +121,10 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'action' => 'required']); //set array rule to check if action is correct
+            'action' => 'required'
+        ], [], [
+            'action' => __("Action")
+        ]); //set array rule to check if action is correct
         $ticket = Ticket::findOrFail($id);
         $action = $request->action;
 
